@@ -1,0 +1,5 @@
+#!/bin/bash
+pass="FyOaXDZVTyx2ihoKKVOSv91ykfBcjQRf"
+echo "$(mysql -u germain_1465 -h 157.230.209.171 -p)"
+sleep 1.5s
+echo pass
