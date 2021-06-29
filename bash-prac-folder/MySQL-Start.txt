@@ -1,0 +1,4 @@
+#!/bin/bash
+echo '$mysql -u germain_1465 -h 157.230.209.171 -p'
+autoexpect 'Enter password:'
+printf "FyOaXDZVTyx2ihoKKVOSv91ykfBcjQRf"
