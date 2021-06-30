@@ -45,7 +45,7 @@ LEFT JOIN dept_emp as db
   ON db.emp_no = t.emp_no
 JOIN departments as d
   ON d.dept_no = db.dept_no
-WHERE t.to_date = '9999-01-01' AND db.dept_no = 'd009'
+WHERE t.to_date = '9999-01-01' AND db.dept_no = 'd009' and 
 GROUP BY t.title
 ORDER BY Title; 
 
@@ -61,3 +61,56 @@ JOIN departments as d
   ON d.dept_no = m.dept_no
 WHERE m.to_date = '9999-01-01' and s.to_date = '9999-01-01'
 ORDER BY Department_name;
+
+SELECT d.dept_no as dept_no, d.dept_name as Department, COUNT(e.emp_no) as num_emp
+FROM employees as e
+JOIN dept_emp as de
+  ON de.emp_no = e.emp_no
+LEFT JOIN departments as d
+  ON d.dept_no = de.dept_no
+WHERE de.to_date = '9999-01-01'
+GROUP BY d.dept_name
+ORDER BY d.dept_no;
+
+SELECT avg(s.salary) AS avg_sal,
+d.dept_name as department
+FROM dept_emp as de
+JOIN employees as e
+  ON e.emp_no = de.emp_no
+JOIN departments as d
+  ON d.dept_no = de.dept_no
+JOIN salaries as s
+  ON s.emp_no = de.emp_no
+  AND de.emp_no = s.emp_no
+WHERE de.to_date = '9999-01-01' AND s.to_date = '9999-01-01'
+GROUP BY d.dept_name
+ORDER BY avg_sal desc
+LIMIT 1;
+
+SELECT CONCAT(first_name, ' ', last_name) as 'full_name', s.salary as 'salary'
+FROM employees as e
+JOIN dept_emp as de
+  ON de.emp_no = e.emp_no
+JOIN departments as d 
+  ON d.dept_no = de.dept_no
+JOIN salaries as s
+  ON s.emp_no = e.emp_no
+WHERE de.to_date = "9999-01-01" AND s.to_date = "9999-01-01" AND d.dept_name = "marketing"
+GROUP BY full_name, salary
+ORDER BY MAX(salary) DESC
+LIMIT 1;
+
+
+SELECT CONCAT(e.first_name, ' ', e.last_name) AS "Employee_name", 
+d.dept_name as "Department_name",
+CONCAT(e1.first_name, ' ', e1.last_name) as 'Manager_name'
+FROM employees as e
+JOIN dept_emp as de
+  	ON de.emp_no = e.emp_no
+JOIN departments as d
+  	ON d.dept_no = de.dept_no
+JOIN dept_manager as dm
+  	ON dm.dept_no = de.dept_no
+JOIN employees as e1
+	ON e1.emp_no = dm.emp_no
+WHERE de.to_date = '9999-01-01' AND dm.to_date = '9999-01-01';
