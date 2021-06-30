@@ -37,19 +37,37 @@ WHERE emp_no IN(
 	SELECT emp_no
 	FROM salaries 
 	WHERE salary > (
-		SELECT avg(salary) FROM salaries WHERE to_date >= NOW()
-	)
+		SELECT avg(salary) FROM salaries
+	) AND to_date >= NOW()
 );
 
-SELECT * FROM employees
-WHERE emp_no IN(
-	SELECT emp_no
+SELECT COUNT(*) AS within_1_stddev_of_max_sal
+FROM salaries 
+JOIN dept_emp 
+	ON dept_emp.emp_no = salaries.emp_no
+	AND salaries.to_date >= NOW()
+JOIN departments
+	ON departments.dept_no = dept_emp.dept_no
+	AND dept_emp.to_date >= NOW()
+WHERE salary >=
+(
+	SELECT MAX(salary)
 	FROM salaries 
-	WHERE salary IN (
-		SELECT STD(salary)
-		FROM salaries
-		GROUP BY salary
-		 HAVING std(salary) BETWEEN 0 AND 1
-	)
+	JOIN dept_emp
+	 ON dept_emp.emp_no = salaries.emp_no
+	 AND salaries.to_date >= NOW()
+	JOIN departments
+	 ON departments.dept_no = dept_emp.dept_no
+	 AND dept_emp.to_date >= NOW()
+)
+-    
+(
+SELECT STDDEV(salary)
+FROM salaries 
+JOIN dept_emp
+	ON dept_emp.emp_no = salaries.emp_no
+	AND salaries.to_date >= NOW()
+JOIN departments
+	ON departments.dept_no = dept_emp.dept_no
+	AND dept_emp.to_date >= NOW()
 );
-	
