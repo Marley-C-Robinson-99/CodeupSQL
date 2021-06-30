@@ -32,16 +32,24 @@ WHERE emp_no IN (
 	WHERE to_date = "9999-01-01"
 ) AND gender = "F";
 
-
-SELECT CONCAT(first_name, ' ', last_name) as "full_name"
-FROM employees
+SELECT * FROM employees
 WHERE emp_no IN(
 	SELECT emp_no
-	FROM salaries
-	WHERE to_date = '9999-01-01'
-	GROUP BY emp_no, salary
-	HAVING avg(salary) < salary);
-SELECT emp_no, salary
-	FROM salaries
-	WHERE to_date = '9999-01-01';
+	FROM salaries 
+	WHERE salary > (
+		SELECT avg(salary) FROM salaries WHERE to_date >= NOW()
+	)
+);
+
+SELECT * FROM employees
+WHERE emp_no IN(
+	SELECT emp_no
+	FROM salaries 
+	WHERE salary IN (
+		SELECT STD(salary)
+		FROM salaries
+		GROUP BY salary
+		 HAVING std(salary) BETWEEN 0 AND 1
+	)
+);
 	
