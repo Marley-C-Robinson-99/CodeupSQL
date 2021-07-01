@@ -19,3 +19,22 @@ SELECT first_name, last_name,
 		WHEN SUBSTR(last_name, 1, 1) BETWEEN 'R' and 'Z' THEN 'R-Z'
 	END AS 'alpha_group'
 FROM employees;
+
+SELECT 
+CASE
+		WHEN d.dept_name = 'Customer Service' THEN "Customer Service"
+		WHEN d.dept_name IN ('Finance', 'Human Resources') THEN "Finance & HR"
+		WHEN d.dept_name IN ('Sales', 'Marketing') THEN "Sales & Marketing"
+		WHEN d.dept_name IN ('Production', 'Quality Managment') THEN "Prod & QM"
+		WHEN d.dept_name IN ('Research', 'Development') THEN "R&D"
+	END as dept_group, 
+AVG(s.salary) as avg_sal
+FROM salaries AS s
+JOIN dept_emp as de
+	ON de.emp_no = s.emp_no
+JOIN departments as d
+	ON d.dept_no = de.dept_no
+WHERE s.to_date = '9999-01-01'
+GROUP BY dept_group
+ORDER BY avg_sal DESC
+LIMIT 5;
