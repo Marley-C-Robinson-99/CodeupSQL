@@ -1,9 +1,12 @@
 USE employees;
-SELECT e.emp_no, de.dept_no, e.hire_date, de.to_date, 
-	IF (de.to_date ='9999-01-01', true, false) as current_emp
-FROM employees AS e
-JOIN dept_emp AS de
-	ON de.emp_no = e.emp_no;
+SELECT de.emp_no,
+    MAX(dnum.dept_no) as "Department Number",
+    MIN(de.from_date) as "Start Date", MAX(de.to_date) as "End Date",
+    IF (MAX(de.to_date) > NOW(), TRUE, FALSE) is_current_employee
+FROM dept_emp as de
+LEFT JOIN (SELECT dept_no, emp_no FROM dept_emp
+WHERE to_date = (SELECT MAX(to_date) FROM dept_emp)) as dnum using (emp_no)
+GROUP BY emp_no;
 
 
 
@@ -15,13 +18,9 @@ SELECT first_name, last_name,
 	END AS 'alpha_group'
 FROM employees;
 
-SELECT count(*) as num_emp,
-	CASE 
-		WHEN SUBSTR(birth_date, 3, 2) LIKE '5%' THEN '50\'s'
-		WHEN SUBSTR(birth_date, 3, 2) LIKE '6%' THEN '60\'s'
-	END AS decade_born
-FROM employees
-GROUP BY decade_born;
+select concat(substring(birth_date,1,3), "0's") as year, count(*) as count
+from employees
+group by year;
 
 SELECT 
 	CASE
@@ -37,6 +36,6 @@ JOIN dept_emp
 	ON dept_emp.emp_no = salaries.emp_no
 JOIN departments
 	ON departments.dept_no = dept_emp.dept_no
-WHERE dept_emp.to_date = '9999-01-01' AND salaries.to_date = '9999-01-01'
+WHERE salaries.to_date = '9999-01-01'
 GROUP BY dept_group
 ORDER BY avg_sal desc;
