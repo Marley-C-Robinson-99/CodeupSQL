@@ -1,1 +1,1 @@
-This repository contains SQL exercise files for Codeups Germain cohort.
+This repository contains SQL exercise files for Codeups Germain cohort, up to 'More Exercises'.
