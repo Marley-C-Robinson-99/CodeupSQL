@@ -1,1 +1,1 @@
-This repository will contain SQL test files for Codeup.
+This repository contains SQL exercise files for Codeups Germain cohort.
