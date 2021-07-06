@@ -6,29 +6,32 @@ JOIN employees.dept_emp as de
   ON de.dept_no = d.dept_no
   AND de.emp_no = e.emp_no;
 
+-- 1a
 ALTER TABLE employees_with_departments ADD full_name VARCHAR(255);
-
 SELECT * FROM employees_with_departments
 LIMIT 20;
 
+-- 1b
 UPDATE employees_with_departments
 SET full_name = CONCAT(first_name, ' ', last_name);
 
+-- 1c
 ALTER TABLE employees_with_departments
 DROP COLUMN first_name;
-
 ALTER TABLE employees_with_departments
 DROP COLUMN last_name;
--- better way to do number one
+
+-- 1d
 CREATE TEMPORARY TABLE employees_with_departments as
 SELECT CONCAT(e.first_name, ' ', e.last_name) as full_name, d.dept_name FROM employees.employees as e
 JOIN employees.departments as d
 JOIN employees.dept_emp as de 
   ON de.dept_no = d.dept_no
   AND de.emp_no = e.emp_no;
+
 -- number two
 DROP TABLE payment_change;
-USE germain_1460;
+USE germain_1465;
 
 CREATE TEMPORARY TABLE payment_change AS
 SELECT *
@@ -59,7 +62,8 @@ JOIN employees.departments as d
   ON d.dept_no = de.dept_no
 GROUP BY dept_name;
 
-SELECT * FROM avg_sal_dept;
+SELECT * FROM avg_sal_dept
+ORDER BY zscore desc;
 
 ALTER TABLE avg_sal_dept ADD zscore float(10,3);
 
